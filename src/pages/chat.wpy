@@ -46,6 +46,7 @@
                 this.$back();
                 return;
             }
+            console.log(contact);
             wx.setNavigationBarTitle({title: contact.name});
 
             this.$invoke('chartboard', 'loadMessage', p.id);
