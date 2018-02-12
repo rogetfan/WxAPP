@@ -46,8 +46,7 @@
                 this.$back();
                 return;
             }
-            console.log(contact);
-            wx.setNavigationBarTitle({title: contact.name});
+            wx.setNavigationBarTitle({title: '智能客服'});
 
             this.$invoke('chartboard', 'loadMessage', p.id);
         }
