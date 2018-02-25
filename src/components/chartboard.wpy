@@ -67,9 +67,8 @@
 
     import api from '../common/api';
     import global from '../common/global';
-
+    let sessionId = '';
     export default class Chartboard extends wepy.component {
-
         data = {
             message: [],
             focus: false,
@@ -122,27 +121,43 @@
         async sendMessage (msg) {
             let id = this.to;
             let msgObj = await api.sendMsg(id, msg);
-
             msgObj.name = this.current.nickName;
             msgObj.icon = this.current.avatarUrl;
             this.message.push(msgObj);
-
             this.$apply();
             this.$invoke('../myinput', 'clear');
+            this.replyMessage(msg);
 
-            let randomReply = await api.getRandomReply(id);
-            this.replyMessage(randomReply);
         }
 
         async replyMessage (msg) {
-            let id = this.to;
-            let contact = global.getContact(id);
-            let msgObj = await api.replyMsg(id, msg);
-            msgObj.name = contact.name;
-            msgObj.icon = contact.icon;
-
-            this.message.push(msgObj);
-            this.$apply();
+            let basicUrl = 'https://aip.baidubce.com/rpc/2.0/solution/v1/unit_utterance?access_token=24.44a88d391cef88403cafa09338738c77.2592000.1521187221.282335-10767554';
+            let dataObj = {};
+            dataObj.scene_id = 17308;
+            dataObj.query = msg;
+            dataObj.session_id = sessionId;
+            let chartboard = this;
+            wx.request({
+                url: basicUrl,
+                method: 'POST',
+                data: JSON.stringify(dataObj),
+                header: {'Content-Type': 'application/json; charset=UTF-8'},
+                success: function(res) {
+                    console.log(res);
+                    console.log(res.data.result.session_id);
+                    if (sessionId === '') {
+                        sessionId = res.data.result.session_id;
+                    }
+                    let id = 'mayun';
+                    let contact = global.getContact(id);
+                    let msgObj = api.replyMsg(id, msg);
+                    msgObj.name = contact.name;
+                    msgObj.icon = contact.icon;
+                    msgObj.msg = res.data.result.action_list[0].say;
+                    chartboard.message.push(msgObj);
+                    chartboard.$apply();
+                }
+            });
         }
     }
 </script>

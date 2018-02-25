@@ -47,7 +47,7 @@
                 return;
             }
             wx.setNavigationBarTitle({title: '智能客服'});
-
+            console.log(p);
             this.$invoke('chartboard', 'loadMessage', p.id);
         }
     }

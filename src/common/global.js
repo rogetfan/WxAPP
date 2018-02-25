@@ -1,6 +1,8 @@
 import m_contacts from '../mocks/contact';
 
 export default {
+    
+
     getContact (v) {
         if (this._contact) {
             return v ? this._contact[v] : this._contact;

@@ -52,6 +52,7 @@ export default {
     // where h.from = :id or h.to = :id or :id = '';
     // order by h.time asc;
     getHistory (id) {
+        console.log(id);
         let history = wepy.getStorageSync('_wechat_history_') || m_history;
         return new Promise((resolve, reject) => {
             setTimeout(() => {
